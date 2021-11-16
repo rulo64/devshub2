@@ -128,7 +128,7 @@ $$(document).on('page:init', '.page[data-name="login"]', function (e) {
   // Do something here when page with data-name="login" attribute loaded and initialized
   console.log(e);
   $$('#log').on('click', login);
-  
+
 })
 
 
@@ -160,7 +160,7 @@ $$(document).on('page:init', '.page[data-name="aptitudes"]', function (e) {
                 <input type="radio" name="demo-radio-start"/>
                 <i class="icon icon-radio"></i>
                 <div class="item-inner">
-                  <div id="`+ doc.data().lenguaje + `" class="item-title">`+ doc.data().lenguaje + `</div>
+                <div id="${doc.data().lenguaje}" class="item-title" onclick="seteaLeng(${doc.data().lenguaje})">${doc.data().lenguaje}</div>
                 </div>
               </label>
             </li>
@@ -176,17 +176,17 @@ $$(document).on('page:init', '.page[data-name="aptitudes"]', function (e) {
                 <input type="radio" name="demo-radio-start"/>
                 <i class="icon icon-radio"></i>
                 <div class="item-inner">
-                  <div id="`+ doc.data().lenguaje + `" class="item-title">`+ doc.data().lenguaje + `</div>
+                <div id="${doc.data().lenguaje}" class="item-title" onclick="seteaLeng(${doc.data().lenguaje})">${doc.data().lenguaje}</div>
                 </div>
               </label>
             </li>
             
             
             `
-            
+
         }
-/*
-        n=doc.data().lenguaje;*/
+        /*
+                n=doc.data().lenguaje;*/
 
         console.log(doc.id, " => ", doc.data().tipo, "  /  ", doc.data().lenguaje);
       });
@@ -197,7 +197,7 @@ $$(document).on('page:init', '.page[data-name="aptitudes"]', function (e) {
       console.log("Error getting documents: ", error);
     });
 
-    
+
 
 })
 
@@ -205,7 +205,7 @@ $$(document).on('page:init', '.page[data-name="aptitudes"]', function (e) {
 $$(document).on('page:init', '.page[data-name="aptitudesrec"]', function (e) {
   // Do something here when page with data-name="login" attribute loaded and initialized
   console.log(e);
- 
+
   fncargardatosrec();
 
 
@@ -275,7 +275,7 @@ function registroDev() {
 
   email = $$('#regmail').val();
   nombre = $$('#regnomb').val();
-  apellido = $$('#regapell').val();  
+  apellido = $$('#regapell').val();
   password = $$('#regcontra').val();
 
 
@@ -334,7 +334,7 @@ function registroRec() {
   email = $$('#regemail').val();
   nombre = $$('#regemp').val();
   apellido = $$('#regempape').val();
-  
+
   password = $$('#regecontra').val();
 
 
@@ -433,10 +433,10 @@ function login() {
           console.log("No such document!");
         }
       }).catch((error) => {
-        console.log("Error getting document:", error);        
-      console.error(errorCode);
-      console.error(errorMessage);
-      mainView.router.navigate('/errorlog/');
+        console.log("Error getting document:", error);
+        console.error(errorCode);
+        console.error(errorMessage);
+        mainView.router.navigate('/errorlog/');
       });
 
     });
@@ -446,13 +446,6 @@ function login() {
 /**LOGIN */
 
 
-/**VER ESTO DE ABAJO (TODAVIA NO PORQUE SOY NOOB) */
-
-/*
-$$(document).on('page:init','.page[data-name="index"]', function (e) {
-  $$('#tuPopOver').on('click', function (e){ console.log(e.target)})
-})
-*/
 
 
 function agregarlenguajes() {
@@ -529,14 +522,14 @@ function agregarlenguajes() {
     .catch(function(error) {
       console.log("Error" + error);
     });*/
-  }
+}
 
 /**LENGUAJES */
 
 
-function fncargardatos() {  
+function fncargardatos() {
 
-  
+
 
   docRef.get().then((doc) => {
     if (doc.exists) {
@@ -551,10 +544,10 @@ function fncargardatos() {
   }).catch((error) => {
     console.log("Error getting document:", error);
   });
-  
+
 }
 
-function fncargardatosrec() {  
+function fncargardatosrec() {
 
   docRef.get().then((doc) => {
     if (doc.exists) {
@@ -569,26 +562,36 @@ function fncargardatosrec() {
   }).catch((error) => {
     console.log("Error getting document:", error);
   });
-  
+
 }
 
+ 
+
+var lenguajeSeteado = "";
+function seteaLeng(lenguaje) {
+lenguajeSeteado = lenguaje;
+}
 
 function fnsumateested() {
 
+$$('#nwleng').append(lenguajeSeteado);
 
+  /*
   var docRef = coleccionLenguajesd.doc("1");
-
-  docRef.get().then((doc) => {
-    if (doc.exists) {
-      console.log("Document data:", doc.data());
-      console.log(doc.data().lenguaje);
-      $$('#nwleng').html(doc.data().lenguaje);
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-  }).catch((error) => {
-    console.log("Error getting document:", error);
-  });
   
+  docRef.get().then((doc) => {
+  if (doc.exists) {
+  console.log("Document data:", doc.data());
+  console.log(doc.data().lenguaje);
+  $$('#nwleng').html(doc.data().lenguaje);
+  } else {
+  // doc.data() will be undefined in this case
+  console.log("No such document!");
+  }
+  }).catch((error) => {
+  console.log("Error getting document:", error);
+  });
+  */
+
+
 }
