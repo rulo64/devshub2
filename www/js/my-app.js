@@ -11,11 +11,11 @@ var app = new Framework7({
   // Enable swipe panel
   panel: {
     swipe: 'left',
-  },
+  }, 
   // Add default routes
   routes: [
-    { path: '/login/', url: 'login.html', }, { path: '/index/', url: 'index.html', }, { path: '/registro/', url: 'registro.html', },
-    { path: '/confirmacion/', url: 'confirmacion.html', }, { path: '/errorreg/', url: 'errorreg.html', },
+    { path: '/login/', url: 'login.html', },  { path: '/login rec/', url: 'login rec.html', }, { path: '/index/', url: 'index.html', }, { path: '/registro/', url: 'registro.html', },
+    { path: '/confirmacion/', url: 'confirmacion.html', }, { path: '/confirmacion rec/', url: 'confirmacion rec.html', }, { path: '/errorreg/', url: 'errorreg.html', },
     { path: '/errorlog/', url: 'errorlog.html', }, { path: '/datosperf/', url: 'datosperf.html', }, { path: '/regdev/', url: 'regdev.html', },
     { path: '/regrec/', url: 'regrec.html', }, { path: '/aptitudes/', url: 'aptitudes.html', }, { path: '/aptitudesrec/', url: 'aptitudesrec.html', },
     { path: '/busquedadevs/', url: 'busquedadevs.html', }, { path: '/busquedarecs/', url: 'busquedarecs.html', },
@@ -28,6 +28,7 @@ var tipoCat = ""; inicio = 0; mostrar = ''; userm = '';
 var nombre = ""; apellido = ""; email = "";
 /*colecciones*/
 var coleccionUsuarios = db.collection("Usuarios");
+var coleccionRecruiters = db.collection("Reclutadores");
 var coleccionLenguajesd = db.collection("Lenguajesd");
 var coleccionLenguajesr = db.collection("Lenguajesr");
 
@@ -57,12 +58,59 @@ $$(document).on('page:init', '.page[data-name="regrec"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="login"]', function (e) {
-  $$('#log').on('click', login);
+  $$('#log').on('click', logind);  
+})
+$$(document).on('page:init', '.page[data-name="login rec"]', function (e) {
+    $$('#logrec').on('click', loginr);
 })
 
 $$(document).on('page:init', '.page[data-name="busquedadevs"]', function (e) {
+
   
- 
+
+
+
+coleccionRecruiters.orderBy("tipoUsuario")
+.get()
+.then((querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    if (tipoCat != doc.data().tipoUsuario) {
+      mostrar += `              
+          <div class="block-title">`+ doc.data().tipoUsuario + `</div>              
+          <li>
+          <label class="item-radio item-radio-icon-start item-content">
+            <input type="radio" name="demo-radio-start"/>
+            <i class="icon icon-radio"></i>
+            <div class="item-inner">
+            <div class="item-title">${doc.data().nombre}</div>
+            </div>
+          </label>
+        </li>
+          `;
+      tipoCat = doc.data().tipoUsuario;
+    }
+    else {
+      mostrar += `<label class="item-radio item-radio-icon-start item-content">
+            <input type="radio" name="demo-radio-start"/>
+            <i class="icon icon-radio"></i>
+            <div class="item-inner">
+            <div class="item-title"">${doc.data().nombre}</div>
+            </div>
+          </label>
+        </li>
+        `
+    }
+    console.log(doc.id, " => ", doc.data().tipo, "  /  ", doc.data().nombre);
+  });
+  $$('#userrec').append(mostrar);
+})
+.catch((error) => {
+  console.log("Error getting documents: ", error);
+});
+
+
+
+
 })
 
 $$(document).on('page:init', '.page[data-name="aptitudes"]', function (e) {
@@ -197,15 +245,15 @@ function registroRec() {
 
   firebase.auth().createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      mainView.router.navigate('/confirmacion/');
+      mainView.router.navigate('/confirmacion rec/');
       var datosRecruit = {
         nombre: nombre,
         apellido: apellido,
         tipoUsuario: "Recruiter"
       }
-      coleccionUsuarios.doc(email).set(datosRecruit)
+      coleccionRecruiters.doc(email).set(datosRecruit)
         .then(function () {
-          console.log("Registro Rec ok");
+          console.log("Base de dato ok");
         })
         .catch(function (error) {
           console.log("Error" + error);
@@ -230,28 +278,58 @@ function registroRec() {
 
 /**LOGIN */
 
-function login() {
+function logind() {
 
   var email = $$('#maillog').val(); var password = $$('#contralog').val();
 
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       var user = userCredential.user;
-      console.log("Bienvenid@!!! " + email);
+      
       docRef = coleccionUsuarios.doc(email)
       docRef.get().then((doc) => {
         if (doc.exists) {
           console.log("Document data:", doc.data());
           tipoUsuario = doc.data().tipoUsuario;
           if (tipoUsuario == "Desarrollador") {
+            console.log("Bienvenid@!!! " + email);
             console.log("anda para Desarrollador");
             mainView.router.navigate('/aptitudes/');
-          } else {
-            console.log("vamos para el Recruiter");
-            mainView.router.navigate('/aptitudesrec/');
-          }
+          } 
         } else {
-          console.log("No such document!");
+          console.log("Usuario incorrecto");
+          mainView.router.navigate('/errorlog/');
+        }
+      }).catch((error) => {
+        console.log("Error getting document:", error);
+        console.error(errorCode);
+        console.error(errorMessage);
+        mainView.router.navigate('/errorlog/');
+      });
+    });
+}
+
+function loginr() {
+
+  var email = $$('#maillogrec').val(); var password = $$('#contralogrec').val();
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      var user = userCredential.user;
+      
+      docRef = coleccionRecruiters.doc(email)
+      docRef.get().then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          tipoUsuario = doc.data().tipoUsuario;
+          if (tipoUsuario == "Recruiter") {
+            console.log("Bienvenid@!!! " + email);
+            console.log("anda para Recruiter");
+            mainView.router.navigate('/aptitudesrec/');
+          } 
+        } else {
+          console.log("Usuario incorrecto");
+          mainView.router.navigate('/errorlog/');
         }
       }).catch((error) => {
         console.log("Error getting document:", error);
@@ -263,73 +341,73 @@ function login() {
 }
 
 /**LOGIN */
- /*
+/*
 function agregarlenguajes() {
  
-    id = "1"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"Python", usuarios:[]};  
-    coleccionLenguajesd.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
-    id = "2"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"Java", usuarios:[]};  
-    coleccionLenguajesd.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
-    id = "3"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"php", usuarios:[]};  
-    coleccionLenguajesd.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
-    id = "4"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"Angular", usuarios:[]};  
-    coleccionLenguajesd.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
-    id = "1"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"Python", usuarios:[]};  
-    coleccionLenguajesr.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
-    id = "2"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"Java", usuarios:[]};  
-    coleccionLenguajesr.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
-    id = "3"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"php", usuarios:[]};  
-    coleccionLenguajesr.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
-    id = "4"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"Angular", usuarios:[]};  
-    coleccionLenguajesr.doc(id).set(datos)
-    .then(function() {
-      console.log("nuevo lenguaje");
-    })
-    .catch(function(error) {
-      console.log("Error" + error);
-    });
+   id = "1"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"Python", usuarios:[]};  
+   coleccionLenguajesd.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
+   id = "2"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"Java", usuarios:[]};  
+   coleccionLenguajesd.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
+   id = "3"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"php", usuarios:[]};  
+   coleccionLenguajesd.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
+   id = "4"; datos = { categoria: "lenguajesd", tipo: "dev", lenguaje:"Angular", usuarios:[]};  
+   coleccionLenguajesd.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
+   id = "1"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"Python", usuarios:[]};  
+   coleccionLenguajesr.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
+   id = "2"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"Java", usuarios:[]};  
+   coleccionLenguajesr.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
+   id = "3"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"php", usuarios:[]};  
+   coleccionLenguajesr.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
+   id = "4"; datos = { categoria: "lenguajesr", tipo: "recruiter", lenguaje:"Angular", usuarios:[]};  
+   coleccionLenguajesr.doc(id).set(datos)
+   .then(function() {
+     console.log("nuevo lenguaje");
+   })
+   .catch(function(error) {
+     console.log("Error" + error);
+   });
 }*/
 
 /**LENGUAJES */
@@ -380,6 +458,8 @@ function seteaLengR(lenguaje) {
 }
 function fnsumateester() {
   $$('#nwlengr').append(lenguajeSeteador);
-  
+
 
 }
+
+
