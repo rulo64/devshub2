@@ -18,14 +18,14 @@ var app = new Framework7({
     { path: '/confirmacion/', url: 'confirmacion.html', }, { path: '/confirmacion rec/', url: 'confirmacion rec.html', }, { path: '/errorreg/', url: 'errorreg.html', },
     { path: '/errorlog/', url: 'errorlog.html', }, { path: '/datosperf/', url: 'datosperf.html', }, { path: '/regdev/', url: 'regdev.html', },
     { path: '/regrec/', url: 'regrec.html', }, { path: '/aptitudes/', url: 'aptitudes.html', }, { path: '/aptitudesrec/', url: 'aptitudesrec.html', },
-    { path: '/busquedadevs/', url: 'busquedadevs.html', }, { path: '/busquedarecs/', url: 'busquedarecs.html', },
+    { path: '/busquedadevs/', url: 'busquedadevs.html', }, { path: '/busquedarecs/', url: 'busquedarecs.html', }, { path: '/busquedarecs/', url: 'busquedarecs.html', },
   ]
   // ... other parameters
 });
 /**GLOBALES*/
 var db = firebase.firestore();
 var tipoCat = ""; inicio = 0; mostrar = ''; userm = '';
-var nombre = ""; apellido = ""; email = "";
+var nombre = ""; apellido = ""; email = ""; mostraru = ''; mostrare = '';
 /*colecciones*/
 var coleccionUsuarios = db.collection("Usuarios");
 var coleccionRecruiters = db.collection("Reclutadores");
@@ -65,52 +65,11 @@ $$(document).on('page:init', '.page[data-name="login rec"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="busquedadevs"]', function (e) {
-
-  
-
-
-
-coleccionRecruiters.orderBy("tipoUsuario")
-.get()
-.then((querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    if (tipoCat != doc.data().tipoUsuario) {
-      mostrar += `              
-          <div class="block-title">`+ doc.data().tipoUsuario + `</div>              
-          <li>
-          <label class="item-radio item-radio-icon-start item-content">
-            <input type="radio" name="demo-radio-start"/>
-            <i class="icon icon-radio"></i>
-            <div class="item-inner">
-            <div class="item-title">${doc.data().nombre}</div>
-            </div>
-          </label>
-        </li>
-          `;
-      tipoCat = doc.data().tipoUsuario;
-    }
-    else {
-      mostrar += `<label class="item-radio item-radio-icon-start item-content">
-            <input type="radio" name="demo-radio-start"/>
-            <i class="icon icon-radio"></i>
-            <div class="item-inner">
-            <div class="item-title"">${doc.data().nombre}</div>
-            </div>
-          </label>
-        </li>
-        `
-    }
-    console.log(doc.id, " => ", doc.data().tipo, "  /  ", doc.data().nombre);
-  });
-  $$('#userrec').append(mostrar);
+cargalistado();
 })
-.catch((error) => {
-  console.log("Error getting documents: ", error);
-});
 
-
-
-
+$$(document).on('page:init', '.page[data-name="busquedarecs"]', function (e) {
+cargalistadod();
 })
 
 $$(document).on('page:init', '.page[data-name="aptitudes"]', function (e) {
@@ -212,6 +171,7 @@ function registroDev() {
       var datosDevs = {
         nombre: nombre,
         apellido: apellido,
+        email:email,
         tipoUsuario: "Desarrollador"
       }
       coleccionUsuarios.doc(email).set(datosDevs)
@@ -249,6 +209,7 @@ function registroRec() {
       var datosRecruit = {
         nombre: nombre,
         apellido: apellido,
+        email:email,
         tipoUsuario: "Recruiter"
       }
       coleccionRecruiters.doc(email).set(datosRecruit)
@@ -463,3 +424,65 @@ function fnsumateester() {
 }
 
 
+
+function cargalistado(){
+
+  coleccionRecruiters.orderBy("tipoUsuario")
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      if (tipoCat != doc.data().tipoUsuario) {
+        mostraru += `
+        <li>
+              <div class="item-title">Nombre: ${doc.data().nombre} <br>Apellido: ${doc.data().apellido} <br>Email de contacto: ${doc.data().email}</div>
+              </li><br><br><br>
+            `;
+        tipoCat = doc.data().tipoUsuario;
+      }
+      else {
+        mostraru += `
+        <li>
+              <div class="item-title"">Nombre: ${doc.data().nombre} <br>Apellido:   ${doc.data().apellido} <br>Email de contacto: ${doc.data().email}</div>
+              </li><br><br><br>
+          `
+      }
+      console.log(doc.id, " => ", doc.data().tipo, "  /  ", doc.data().nombre + doc.data().apellido);
+    });
+    $$('#userrec').append(mostraru);
+  })
+  .catch((error) => {
+    console.log("Error getting documents: ", error);
+  });
+  
+  }
+
+function cargalistadod(){
+
+  coleccionUsuarios.orderBy("tipoUsuario")
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      if (tipoCat != doc.data().tipoUsuario) {
+        mostrare += `
+        <li>
+              <div class="item-title">Nombre: ${doc.data().nombre} <br>Apellido: ${doc.data().apellido} <br>Email de contacto: ${doc.data().email}</div>
+              </li><br><br><br>
+            `;
+        tipoCat = doc.data().tipoUsuario;
+      }
+      else {
+        mostrare += `
+        <li>
+              <div class="item-title"">Nombre: ${doc.data().nombre} <br>Apellido:   ${doc.data().apellido} <br>Email de contacto: ${doc.data().email}</div>
+              </li><br><br><br>
+          `
+      }
+      console.log(doc.id, " => ", doc.data().tipo, "  /  ", doc.data().nombre + doc.data().apellido);
+    });
+    $$('#userdev').append(mostrare);
+  })
+  .catch((error) => {
+    console.log("Error getting documents: ", error);
+  });
+  
+  }
