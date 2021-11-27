@@ -20,3 +20,4 @@ Crea y/o ingresa a tu carpeta inicial del desarrollo. Descarga el template con e
 
 Ingresando luego en la carpeta f7-v606 podrá usar el template de Framework 7, Version 6.0.6
 
+"# devshubnuevo" 
