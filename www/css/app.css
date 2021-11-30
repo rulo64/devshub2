@@ -83,6 +83,26 @@
 * {
 	font-family: 'Poppins', Arial, sans-serif;
 }
+.bg-general {
+  background-color: rgb(27, 92, 97);
+  color: antiquewhite;
+}
+.bg-secundario {
+  background-color: rgb(224, 231, 231);
+ 
+}
+
+.bg-terciario {
+  background-color: rgb(234, 238, 238);
+ 
+}
+
+.volver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 .logo {
   display: flex;
@@ -119,34 +139,14 @@ display: block;
  align-items: center;
 }
 
-.titul {
-  font-size: 35px;
+.titulo {
+  font-size: 25px;
+  color: rgb(27, 92, 97);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.guardar {
-  margin-left: 10%;
-  width: 30%;
-}
-
-.datos {  
-  margin: 3%;
-}
-
-.perfild {
-  margin: 0% 12%;
-}
-
-.fotoperf {
-  width: 25%;
-  display: flex;
-  text-align: left;
-  align-items: center;
-  align-content: flex-start;
-  justify-content: center;
-}
 
 .subf {
   padding: 3%;

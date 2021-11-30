@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="theme-dark">
+<html class="color-theme-teal">
 
 <head>
     <!--
@@ -13,72 +13,34 @@
         -->
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
 -->
-    <!-- Required meta tags-->
+
     <meta charset="utf-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
-    <!-- Color theme for statusbar -->
-    <!-- <meta name="theme-color" content="#2196f3"> -->
+
     <meta name="color-scheme" content="light dark">
 
-    <!-- Your app title -->
     <title>Devs hub</title>
-    <!-- Path to Framework7 Library CSS -->
     <link rel="stylesheet" href="lib/framework7/framework7-bundle.min.css">
-    <!-- Path to icons -->
     <link rel="stylesheet" href="css/icons.css">
-    <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
     <div id="app">
-        <!-- Statusbar overlay -->
         <div class="statusbar"></div>
-
-        <!-- Your main view, should have "view-main" class -->
         <div class="view view-main">
-
-            <!-- Top Navbar -->
-           <!-- <div class="navbar">
-                <div class="navbar-bg"></div>
-                <div class="navbar-inner">
-                    <div class="left"><i class="icon icon-back"></i></div>
-                    <div class="title">devshub</div>
-                    <div class="right"><i class="icon icon-forward"></i></div>
-                </div>
-            </div>-->
-
-            <!-- Toolbar -->
-            <div class="toolbar toolbar-bottom">
-                <div class="toolbar-inner">
-                    <!-- Toolbar links -->
-                 <!-- <a href="#" class="link">Link 1</a>
-                    <a href="#" class="link">Link 2</a>-->  
-                </div>
-            </div>
-
-            <!-- Initial Page, "data-name" contains page name -->
             <div data-name="index" class="page">
-                <!-- Scrollable page content -->
-                <div class="page-content">
+                <div class="page-content bg-general">
                     <div class="logo">
-                        <!-- Link to another page -->
-                        <!--<a href="/login/" data-view=".page-content"><img src="https://i.ibb.co/NtggyVY/logo.png"
-                            alt="logo"></a>-->
-
-                        <!-- In data-popup attribute we specify CSS selector of popup we need to open -->
-                        <p><a href="#" data-popup=".my-popup" class="popup-open"><img src="https://i.ibb.co/NtggyVY/logo.png"
+                        <p><a href="#" data-popup=".my-popup" class="popup-open"><img src="https://i.postimg.cc/MpB6gSpk/logo.png"
                             alt="logo"></p>
-
-                 
                         <div class="popup my-popup">
                             <div class="view">
                                 <div class="page">
-                                    
                                     <div class="page-content block">
                                         <button class="button button-fill"><a href="/login/" id="tuPopOver" class="link popup-close " style="color: white;" data-view=".page-content">Ingresar como Desarrollador</a></button> <br>
                                         <button class="button button-fill"><a href="/login rec/" id="tuPopOver" class="link popup-close " style="color: white;" data-view=".page-content">Ingresar como Reclutador</a></button> <br>
