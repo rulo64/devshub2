@@ -31,8 +31,8 @@ var app = new Framework7({
 });
 /**GLOBALES*/
 var db = firebase.firestore();
-var nombre = ""; apellido = ""; email = ""; mostrar = "";
-var mensaje = ""; titulo = ""; oferta = ""; tipoOf = "";
+var nombre = ""; apellido = ""; email = ""; busqueda = "";
+var mensaje = ""; titulo = ""; oferta = "";
 
 /*colecciones*/
 var coleccionUsuarios = db.collection("Usuarios");
@@ -70,14 +70,65 @@ $$(document).on('page:init', '.page[data-name="login rec"]', function (e) {
   $$('#logrec').on('click', loginr);
 })
 
+$$(document).on('page:init', '.page[data-name="busqueda"]', function (e) {
+  $$('#search').on('click', fnbuscaoferta());
+  crearBusqueda();
+
+})
+
 $$(document).on('page:init', '.page[data-name="ofertas"]', function (e) {
-  $$('#l-of').on('click', fnlistaof);
-  $$('#cerrarpop').on('click', fncerrarpop);
+
+
+  tipoOf = "";
+  inicio = 0;
+  mostrar = "";
+
+  coleccionOfertas.orderBy("titulo")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (tipoOf != doc.data().ofertas) {
+          mostrar += `  
+          <ul>     
+            <li>
+            <a href="#" class="item-link item-content bg-terciario">
+              <div class="item-inner">
+              <div class="item-title-row">
+                <div class="item-title">${doc.data().titulo}</div>
+              </div>
+              <div class="item-text">${doc.data().mensaje}</div><br>
+        
+                `;
+          tipoOf = doc.data().ofertas;
+        } else {
+          mostrar += `               
+          <div class="item-title-row">
+            <div class="item-title">${doc.data().titulo}</div>
+          </div>
+          <div class="item-text">${doc.data().mensaje}</div><br>`
+        }
+
+        console.log(doc.id, " => ", doc.data().titulo);
+      });
+
+      mostrar += `
+      </div>
+     </a>
+    </li>
+   </ul>
+    `;
+
+
+      $$('#lis-mis-of').append(mostrar);
+    })
+    .catch((error) => {
+      console.log("Error getting documents: ", error);
+    });
 
 })
 
 $$(document).on('page:init', '.page[data-name="nuevaof"]', function (e) {
-  $$('#crear-nuevaof').on('click', fncrearof);
+  /** $$('#crear-nuevaof').on('click', fncrearof);**/
 })
 
 
@@ -238,16 +289,16 @@ function fncrearof() {
       email = doc.data().email;
 
       coleccionOfertas.doc(titulo).set({
-          titulo: titulo,
-          mensaje: mensaje,
-          email: email,
-        })
+        titulo: titulo,
+        mensaje: mensaje,
+        email: email,
+      })
         .then(() => {
           console.log("Oferta cargada");
           mainView.router.navigate('/ofertas/');
         })
     } else {
-      console.log("No such document!");
+      console.log("No pudo crearse la oferta");
     }
   }).catch((error) => {
     console.log("Error getting document:", error);
@@ -255,38 +306,41 @@ function fncrearof() {
 
 }
 
-function fnlistaof() {
+function fnbuscaoferta() {
+  console.log("busqueda");
+  coleccionOfertas
+    .orderBy("titulo")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var busqueda = `<li class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">${doc.data().titulo}</div>
+                        <div class="item-after">
+                        </div>
+                    </div>
+                </li>`;
+        $$("#busq-ofertas").append(busqueda);
+      });
+    })
+    .catch(function (error) {
+      console.log("Error getting documents: ", error);
+    });
+}
 
-coleccionOfertas.orderBy("titulo")
-.get()
-.then((querySnapshot) => {
-  querySnapshot.forEach((doc) => {
-    if (tipoOf != doc.data().ofertas) {
-      mostrar += `  
-      <ul>          
-      <li>
-      <a href="#" class="item-link item-content">
-        <div class="item-inner">
-          <div class="item-title-row">
-            <div class="item-title">${doc.data().titulo}</div>
-          </div>
-          <div class="item-text">${doc.data().mensaje}</div>
-        </div>
-      </a>
-    </li>
-    </ul>
-          `;
-    }
-    console.log(doc.data().titulo);
+
+
+function crearBusqueda() {
+  console.log('Busco mi oferta');
+  searchbar = app.searchbar.create({
+    el: ".searchbar",
+    searchContainer: ".list",
+    searchIn: ".item-title",
+    on: {
+      search(sb, query, previousQuery) {
+        console.log(query, previousQuery);
+      },
+    },
   });
-  $$('#lis-mis-of').append(mostrar);
-})
-.catch((error) => {
-  console.log("Error getting documents: ", error);
-});
-
 }
 
-function fncerrarpop(){
-  mainView.router.navigate('/ofertas/');
-}
