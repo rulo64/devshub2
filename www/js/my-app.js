@@ -73,7 +73,9 @@ $$(document).on('page:init', '.page[data-name="login rec"]', function (e) {
 $$(document).on('page:init', '.page[data-name="busqueda"]', function (e) {
   $$('#search').on('click', fnbuscaoferta());
   crearBusqueda();
-
+})
+$$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
+  $$('#btnGaleria').on('click', fnGaleria());
 })
 
 $$(document).on('page:init', '.page[data-name="ofertas"]', function (e) {
@@ -128,7 +130,7 @@ $$(document).on('page:init', '.page[data-name="ofertas"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="nuevaof"]', function (e) {
-  /** $$('#crear-nuevaof').on('click', fncrearof);**/
+  $$('#crear-nuevaof').on('click', fncrearof);
 })
 
 
@@ -329,7 +331,6 @@ function fnbuscaoferta() {
 }
 
 
-
 function crearBusqueda() {
   console.log('Busco mi oferta');
   searchbar = app.searchbar.create({
@@ -343,4 +344,65 @@ function crearBusqueda() {
     },
   });
 }
+
+
+function fnGaleria() {
+  navigator.camera.getPicture(onSuccessCamara,onErrorCamara,
+          {
+              quality: 50,
+              destinationType: Camera.DestinationType.FILE_URI,
+              sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+          });
+
+}
+
+function onSuccessCamara(imageData) {
+  var storageRef = firebase.storage().ref();
+  var getFileBlob = function(url, cb) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url);
+      xhr.responseType = "blob";
+      xhr.addEventListener('load', function() {
+          cb(xhr.response);
+      });
+      xhr.send();
+  }; 
+
+  var blobToFile = function(blob, name) {
+      blob.lastModifiedDate = new Date();
+      blob.name = name;
+      return blob;
+  };
+
+  var getFileObject = function(filePathOrUrl, cb) {
+      getFileBlob(filePathOrUrl, function(blob) {
+          cb(blobToFile(blob, 'test.jpg'));
+      });
+  };
+
+
+
+
+  getFileObject(imageData, function(fileObject) {
+      var uploadTask = storageRef.child('images/test.jpg').put(fileObject);
+
+      uploadTask.on('state_changed', function(snapshot) {
+          console.log(snapshot);
+      }, function(error) {
+          console.log(error);
+      }, function() {
+          var downloadURL = uploadTask.snapshot.downloadURL;
+          console.log(downloadURL);
+          // handle image here
+      });
+  });
+
+}
+
+
+
+function onErrorCamara() {
+  console.log('error de camara');
+}
+
 
