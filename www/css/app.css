@@ -161,3 +161,29 @@ display: block;
 .lengmas {  
   padding: 10%;
 }
+
+.foto-perfil {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}
+
+.popup-mio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 82%;
+  height: 25%;
+  border-radius: 10px;
+  margin: 30% 8%;
+}
+.popup-mio2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 82%;
+  height: 40%;
+  border-radius: 10px;
+  margin: 30% 8%;
+}

@@ -33,6 +33,7 @@ var app = new Framework7({
 var db = firebase.firestore();
 var nombre = ""; apellido = ""; email = ""; busqueda = "";
 var mensaje = ""; titulo = ""; oferta = "";
+var nombrenue = ""; apellidonue = "";
 
 /*colecciones*/
 var coleccionUsuarios = db.collection("Usuarios");
@@ -71,11 +72,14 @@ $$(document).on('page:init', '.page[data-name="login rec"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="busqueda"]', function (e) {
-  $$('#search').on('click', fnbuscaoferta());
+  $$('#search').on('click', fnbuscaoferta);
   crearBusqueda();
+  fncargardatos();
 })
-$$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
-  $$('#btnGaleria').on('click', fnGaleria());
+$$(document).on('page:init', '.page[data-name="perfil"]', function (e) {  
+  fncargardatos();
+  $$('#btnGaleria').on('click', fnGaleria);
+  $$('#guardarcambiosd').on('click', fnguardarcambiosd);
 })
 
 $$(document).on('page:init', '.page[data-name="ofertas"]', function (e) {
@@ -344,6 +348,52 @@ function crearBusqueda() {
     },
   });
 }
+
+function fncargardatos() {
+
+  docRef.get().then((doc) => {
+    if (doc.exists) {
+      console.log("Document data:", doc.data());
+      console.log("Nombre:" + doc.data().nombre);
+      $$('#nombre-dev').html(doc.data().nombre);
+      $$('#apellido-dev').html(doc.data().apellido);
+    } else {
+      console.log("No such document!");
+    }
+  }).catch((error) => {
+    console.log("Error getting document:", error);
+  });
+}
+
+function fnguardarcambiosd() {
+
+  docRef.get().then((doc) => {
+    if (doc.exists) {
+      nombrenue = $$('#cambio-nombred').val();
+      apellidonue = $$('#cambio-apellid').val();
+      email = doc.data().email;
+      tipoUsuario = doc.data().tipoUsuario;
+
+      coleccionUsuarios.doc(email).set({
+        nombre: nombrenue,
+        apellido: apellidonue,
+        email: email,
+        tipoUsuario: tipoUsuario
+      })
+        .then(() => {
+          console.log("datos cambiados");
+          mainView.router.navigate('/busqueda/');
+        })
+    } else {
+      console.log("error al cambiar datos");
+    }
+  }).catch((error) => {
+    console.log("Error getting document:", error);
+  });
+}
+
+
+
 
 
 function fnGaleria() {
