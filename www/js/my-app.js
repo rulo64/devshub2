@@ -24,6 +24,7 @@ var app = new Framework7({
     { path: '/regrec/', url: 'regrec.html', },
     { path: '/busqueda/', url: 'busqueda.html', },
     { path: '/perfil/', url: 'perfil.html', },
+    { path: '/perfilr/', url: 'perfilr.html', },
     { path: '/ofertas/', url: 'ofertas.html', },
     { path: '/nuevaof/', url: 'nuevaof.html', },
   ]
@@ -34,6 +35,7 @@ var db = firebase.firestore();
 var nombre = ""; apellido = ""; email = ""; busqueda = "";
 var mensaje = ""; titulo = ""; oferta = "";
 var nombrenue = ""; apellidonue = "";
+var nombrenuer = ""; apellidonuer = "";
 
 /*colecciones*/
 var coleccionUsuarios = db.collection("Usuarios");
@@ -81,9 +83,14 @@ $$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
   $$('#btnGaleria').on('click', fnGaleria);
   $$('#guardarcambiosd').on('click', fnguardarcambiosd);
 })
+$$(document).on('page:init', '.page[data-name="perfilr"]', function (e) {  
+  fncargardatosr();
+  $$('#btnGaleria').on('click', fnGaleria);
+  $$('#guardarcambiosr').on('click', fnguardarcambiosr);
+})
 
 $$(document).on('page:init', '.page[data-name="ofertas"]', function (e) {
-
+  fncargardatosr();
 
   tipoOf = "";
   inicio = 0;
@@ -365,6 +372,22 @@ function fncargardatos() {
   });
 }
 
+function fncargardatosr() {
+
+  docRef.get().then((doc) => {
+    if (doc.exists) {
+      console.log("Document data:", doc.data());
+      console.log("Nombre:" + doc.data().nombre);
+      $$('#nombre-rec').html(doc.data().nombre);
+      $$('#apellido-rec').html(doc.data().apellido);
+    } else {
+      console.log("No such document!");
+    }
+  }).catch((error) => {
+    console.log("Error getting document:", error);
+  });
+}
+
 function fnguardarcambiosd() {
 
   docRef.get().then((doc) => {
@@ -383,6 +406,34 @@ function fnguardarcambiosd() {
         .then(() => {
           console.log("datos cambiados");
           mainView.router.navigate('/busqueda/');
+        })
+    } else {
+      console.log("error al cambiar datos");
+    }
+  }).catch((error) => {
+    console.log("Error getting document:", error);
+  });
+}
+
+
+function fnguardarcambiosr() {
+
+  docRef.get().then((doc) => {
+    if (doc.exists) {
+      nombrenuer = $$('#cambio-nombrer').val();
+      apellidonuer = $$('#cambio-apellir').val();
+      email = doc.data().email;
+      tipoUsuario = doc.data().tipoUsuario;
+
+      coleccionRecruiters.doc(email).set({
+        nombre: nombrenuer,
+        apellido: apellidonuer,
+        email: email,
+        tipoUsuario: tipoUsuario
+      })
+        .then(() => {
+          console.log("datos cambiados");
+          mainView.router.navigate('/ofertas/');
         })
     } else {
       console.log("error al cambiar datos");
