@@ -1,5 +1,5 @@
 <!-- We don't need a full layout in this file because this page will be parsed with Ajax.  -->
-<div class="page" data-name="perfil">
+<div class="page" data-name="perfilr">
   <div class="navbar bg-color-teal" style="color: aliceblue;">
     <div class="navbar-inner sliding">
       <div class="left">
@@ -12,20 +12,20 @@
   <div class="page-content bg-secundario">
     <div class="block row">
       <div class="col-50 bg-terciario foto-perfil">
-        <img src='https://i.postimg.cc/ThF8bv7j/Max-R-Headshot-1-1.jpg' id="foto" width="100%">
+        <img src='https://i.postimg.cc/ThF8bv7j/Max-R-Headshot-1-1.jpg' id="fotor" width="100%">
       </div>
       <div class="col-50 list">
         <ul>
           <li class="item-content item-input bg-terciario">
             <div class="item-inner ">
               <div class="item-title item-label">Nombre</div>
-              <p id="nombre-rec"></p>
+              <p class="nombre-rec"></p>
             </div>
           </li>
           <li class="item-content item-input bg-terciario">
             <div class="item-inner ">
               <div class="item-title item-label">Apellido</div>
-              <p id="apellido-rec"></p>
+              <p class="apellido-rec"></p>
             </div>
           </li>
         </ul>
@@ -38,39 +38,45 @@
               src="https://img.icons8.com/ios-glyphs/18/000000/edit--v1.png" /></a></button>
       </div>
     </div>
-    <div class="popup my-popup bg-secundario popup-mio2">
+    <div class="popup my-popup bg-secundario popup-mio2">      
       <div class="view bg-secundario">
-          <div class="page bg-secundario">
-              <div class="page-content block">
-                <div class="col-50 list">
-                <ul>
-                  <li class="item-content item-input bg-terciario">
-                    <div class="item-inner">
-                      <div class="item-title item-label">Nombre</div>
-                      <div class="item-input-wrap">
-                        <input type="text" id="cambio-nombrer" required validate />
-                        <span class="input-clear-button"></span>
-                      </div>
+        <div class="page bg-secundario">
+          <div class="page-content block"> 
+            <div class="titulo-pop">
+              <p><strong>Modificar Datos</strong></p>
+            </div>          
+            <div class="col-50 list">
+              <ul>
+                <li class="item-content item-input bg-terciario">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Nombre</div>
+                    <div class="item-input-wrap">
+                      <input type="text" id="cambio-nombrer" required validate />
+                      <span class="input-clear-button"></span>
                     </div>
-                  </li>          
-                  <li class="item-content item-input bg-terciario">
-                    <div class="item-inner">
-                      <div class="item-title item-label">Apellido</div>
-                      <div class="item-input-wrap">
-                        <input type="text" id="cambio-apellir" required validate />
-                        <span class="input-clear-button"></span>
-                      </div>
+                  </div>
+                </li>
+                <li class="item-content item-input bg-terciario">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Apellido</div>
+                    <div class="item-input-wrap">
+                      <input type="text" id="cambio-apellir" required validate />
+                      <span class="input-clear-button"></span>
                     </div>
-                  </li>          
-                </ul>                
-              </div>
-              <div class="block row">                
-                <button class="button col-45 button-fill popup-close">Cancelar</button>
-                <button class="button col-45 button-fill popup-close convert-form-to-data" id="guardarcambiosr">Aceptar</button>
-              </div>
-              </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="block row">
+              <button class="button col-45 button-fill popup-close">Cancelar</button>
+              <button class="button col-45 button-fill popup-close convert-form-to-data"
+                id="guardarcambiosr">Aceptar</button>
+            </div>
           </div>
+        </div>
       </div>
-  </div>
+    </div>
   </div>
 </div>
+
+<a href=""></a>

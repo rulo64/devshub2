@@ -91,10 +91,22 @@
   background-color: rgb(224, 231, 231);
  
 }
+.bg-intermedio {
+  background-color: rgb(27, 92, 97);
+ 
+}
+
+.colorete {
+  color: rgb(255, 255, 255);
+}
 
 .bg-terciario {
   background-color: rgb(234, 238, 238);
  
+}
+
+.emailc {
+  font-size: 16px;
 }
 
 .volver {
@@ -146,6 +158,13 @@ display: block;
   justify-content: center;
   align-items: center;
 }
+.titulo-pop {
+  font-size: 19px;
+  color: rgb(27, 92, 97);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 
 .subf {
@@ -174,7 +193,7 @@ display: block;
   justify-content: center;
   align-items: center;
   width: 82%;
-  height: 25%;
+  height: 30%;
   border-radius: 10px;
   margin: 30% 8%;
 }
@@ -183,7 +202,7 @@ display: block;
   justify-content: center;
   align-items: center;
   width: 82%;
-  height: 40%;
+  height: 55%;
   border-radius: 10px;
   margin: 30% 8%;
 }
@@ -207,4 +226,8 @@ display: block;
   align-items: center;
   justify-content: center;
   margin-top: 3%;
+}
+
+.bordeacord {  
+  border: 1px solid rgb(209, 238, 243);
 }

@@ -19,7 +19,9 @@ var app = new Framework7({
     { path: '/index/', url: 'index.html', },
     { path: '/registro/', url: 'registro.html', },
     { path: '/confirmacion/', url: 'confirmacion.html', },
+    { path: '/confirmacion rec/', url: 'confirmacion rec.html', },
     { path: '/errorreg/', url: 'errorreg.html', },
+    { path: '/errorlog/', url: 'errorlog.html', },
     { path: '/regdev/', url: 'regdev.html', },
     { path: '/regrec/', url: 'regrec.html', },
     { path: '/busqueda/', url: 'busqueda.html', },
@@ -74,16 +76,16 @@ $$(document).on('page:init', '.page[data-name="login rec"]', function (e) {
 })
 
 $$(document).on('page:init', '.page[data-name="busqueda"]', function (e) {
-  $$('#search').on('click', fnbuscaoferta);
+  $$('#search').on('click', fnbuscaoferta());
   crearBusqueda();
   fncargardatos();
 })
-$$(document).on('page:init', '.page[data-name="perfil"]', function (e) {  
+$$(document).on('page:init', '.page[data-name="perfil"]', function (e) {
   fncargardatos();
   $$('#btnGaleria').on('click', fnGaleria);
   $$('#guardarcambiosd').on('click', fnguardarcambiosd);
 })
-$$(document).on('page:init', '.page[data-name="perfilr"]', function (e) {  
+$$(document).on('page:init', '.page[data-name="perfilr"]', function (e) {
   fncargardatosr();
   $$('#btnGaleria').on('click', fnGaleria);
   $$('#guardarcambiosr').on('click', fnguardarcambiosr);
@@ -102,33 +104,41 @@ $$(document).on('page:init', '.page[data-name="ofertas"]', function (e) {
       querySnapshot.forEach((doc) => {
         if (tipoOf != doc.data().ofertas) {
           mostrar += `  
-          <ul>     
-            <li>
-            <a href="#" class="item-link item-content bg-terciario">
-              <div class="item-inner">
-              <div class="item-title-row">
-                <div class="item-title">${doc.data().titulo}</div>
+          <ul>
+          <li class="accordion-item "><a class="item-content item-link bg-intermedio bordeacord" href="#">
+              <div class="item-inner  colorete ">
+                <div class="item-title"><strong>${doc.data().titulo}</strong></div>
               </div>
-              <div class="item-text">${doc.data().mensaje}</div><br>
-        
-                `;
+            </a>
+            <div class="accordion-item-content bg-terciario">
+              <div class="block">
+                <p>${doc.data().mensaje}</p>
+              </div>
+            </div> `;
           tipoOf = doc.data().ofertas;
         } else {
-          mostrar += `               
-          <div class="item-title-row">
-            <div class="item-title">${doc.data().titulo}</div>
-          </div>
-          <div class="item-text">${doc.data().mensaje}</div><br>`
+          mostrar += `         
+          <ul>
+          <li class="accordion-item"><a class="item-content item-link bg-intermedio bordeacord" href="#">
+              <div class="item-inner colorete">
+                <div class="item-title"><strong>${doc.data().titulo}</strong></div>
+              </div>
+            </a>
+            <div class="accordion-item-content bg-terciario">
+              <div class="block">
+                <p>${doc.data().mensaje}</p>
+              </div>
+            </div>
+         `
+          
         }
 
         console.log(doc.id, " => ", doc.data().titulo);
       });
 
       mostrar += `
-      </div>
-     </a>
-    </li>
-   </ul>
+      </li>
+      </ul>
     `;
 
 
@@ -154,8 +164,7 @@ function registroDev() {
   email = $$('#regmail').val(); nombre = $$('#regnomb').val(); apellido = $$('#regapell').val(); password = $$('#regcontra').val();
 
   firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      mainView.router.navigate('/confirmacion/');
+    .then((userCredential) => {      
       var datosDevs = {
         nombre: nombre,
         apellido: apellido,
@@ -165,6 +174,7 @@ function registroDev() {
       coleccionUsuarios.doc(email).set(datosDevs)
         .then(function () {
           console.log("Base de dato ok");
+          mainView.router.navigate('/confirmacion/');
         })
         .catch(function (error) {
           console.log("Error" + error);
@@ -192,8 +202,7 @@ function registroRec() {
   email = $$('#regemail').val(); nombre = $$('#regemp').val(); apellido = $$('#regempape').val(); password = $$('#regecontra').val();
 
   firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      mainView.router.navigate('/confirmacion rec/');
+    .then((userCredential) => {      
       var datosRecruit = {
         nombre: nombre,
         apellido: apellido,
@@ -203,6 +212,7 @@ function registroRec() {
       coleccionRecruiters.doc(email).set(datosRecruit)
         .then(function () {
           console.log("Base de dato ok");
+          mainView.router.navigate('/confirmacion rec/');
         })
         .catch(function (error) {
           console.log("Error" + error);
@@ -247,14 +257,19 @@ function logind() {
           }
         } else {
           console.log("Usuario incorrecto");
-          mainView.router.navigate('/errorlog/');
         }
-      }).catch((error) => {
-        console.log("Error getting document:", error);
-        console.error(errorCode);
-        console.error(errorMessage);
-        mainView.router.navigate('/errorlog/');
+      }).catch(function (error) {
+        console.log("Error" + error);
       });
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+
+    console.error(errorCode);
+    console.error(errorMessage);
+    mainView.router.navigate('/errorlog/')
+    console.error("mail o password erroneos");    
     });
 }
 
@@ -278,14 +293,16 @@ function loginr() {
           }
         } else {
           console.log("Usuario incorrecto");
-          mainView.router.navigate('/errorlog/');
         }
       }).catch((error) => {
-        console.log("Error getting document:", error);
+        var errorCode = error.code;
+        var errorMessage = error.message;
+    
         console.error(errorCode);
         console.error(errorMessage);
-        mainView.router.navigate('/errorlog/');
-      });
+        mainView.router.navigate('/errorlog/')
+        console.error("mail o password erroneos");    
+        });
     });
 }
 
@@ -320,21 +337,33 @@ function fncrearof() {
 }
 
 function fnbuscaoferta() {
+
+ 
+
   console.log("busqueda");
   coleccionOfertas
     .orderBy("titulo")
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        var busqueda = `<li class="item-content">
-                    <div class="item-inner">
-                        <div class="item-title">${doc.data().titulo}</div>
-                        <div class="item-after">
-                        </div>
-                    </div>
-                </li>`;
-        $$("#busq-ofertas").append(busqueda);
-      });
+         var busqueda = 
+         `<ul>
+         <li class="accordion-item"><a class="item-content item-link bg-intermedio bordeacord" href="#">
+             <div class="item-inner  colorete">
+               <div class="item-title"><strong>${doc.data().titulo}</strong></div>
+             </div>
+           </a>
+           <div class="accordion-item-content bg-terciario">
+             <div class="block">
+               <p>${doc.data().mensaje}</p>
+               <p><a href="#" id="${doc.data().email}" class="emailc"><strong>Email de contacto:  </strong> ${doc.data().email}</a></p>
+             </div>
+           </div> `
+           ;          
+      $$("#busq-ofertas").append(busqueda);
+        });
+
+      
     })
     .catch(function (error) {
       console.log("Error getting documents: ", error);
@@ -362,8 +391,8 @@ function fncargardatos() {
     if (doc.exists) {
       console.log("Document data:", doc.data());
       console.log("Nombre:" + doc.data().nombre);
-      $$('#nombre-dev').html(doc.data().nombre);
-      $$('#apellido-dev').html(doc.data().apellido);
+      $$('.nombre-dev').html(doc.data().nombre);
+      $$('.apellido-dev').html(doc.data().apellido);
     } else {
       console.log("No such document!");
     }
@@ -378,8 +407,8 @@ function fncargardatosr() {
     if (doc.exists) {
       console.log("Document data:", doc.data());
       console.log("Nombre:" + doc.data().nombre);
-      $$('#nombre-rec').html(doc.data().nombre);
-      $$('#apellido-rec').html(doc.data().apellido);
+      $$('.nombre-rec').html(doc.data().nombre);
+      $$('.apellido-rec').html(doc.data().apellido);
     } else {
       console.log("No such document!");
     }
@@ -448,54 +477,54 @@ function fnguardarcambiosr() {
 
 
 function fnGaleria() {
-  navigator.camera.getPicture(onSuccessCamara,onErrorCamara,
-          {
-              quality: 50,
-              destinationType: Camera.DestinationType.FILE_URI,
-              sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-          });
+  navigator.camera.getPicture(onSuccessCamara, onErrorCamara,
+    {
+      quality: 50,
+      destinationType: Camera.DestinationType.FILE_URI,
+      sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+    });
 
 }
 
 function onSuccessCamara(imageData) {
   var storageRef = firebase.storage().ref();
-  var getFileBlob = function(url, cb) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", url);
-      xhr.responseType = "blob";
-      xhr.addEventListener('load', function() {
-          cb(xhr.response);
-      });
-      xhr.send();
-  }; 
-
-  var blobToFile = function(blob, name) {
-      blob.lastModifiedDate = new Date();
-      blob.name = name;
-      return blob;
+  var getFileBlob = function (url, cb) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.addEventListener('load', function () {
+      cb(xhr.response);
+    });
+    xhr.send();
   };
 
-  var getFileObject = function(filePathOrUrl, cb) {
-      getFileBlob(filePathOrUrl, function(blob) {
-          cb(blobToFile(blob, 'test.jpg'));
-      });
+  var blobToFile = function (blob, name) {
+    blob.lastModifiedDate = new Date();
+    blob.name = name;
+    return blob;
+  };
+
+  var getFileObject = function (filePathOrUrl, cb) {
+    getFileBlob(filePathOrUrl, function (blob) {
+      cb(blobToFile(blob, 'test.jpg'));
+    });
   };
 
 
 
 
-  getFileObject(imageData, function(fileObject) {
-      var uploadTask = storageRef.child('images/test.jpg').put(fileObject);
+  getFileObject(imageData, function (fileObject) {
+    var uploadTask = storageRef.child('images/test.jpg').put(fileObject);
 
-      uploadTask.on('state_changed', function(snapshot) {
-          console.log(snapshot);
-      }, function(error) {
-          console.log(error);
-      }, function() {
-          var downloadURL = uploadTask.snapshot.downloadURL;
-          console.log(downloadURL);
-          // handle image here
-      });
+    uploadTask.on('state_changed', function (snapshot) {
+      console.log(snapshot);
+    }, function (error) {
+      console.log(error);
+    }, function () {
+      var downloadURL = uploadTask.snapshot.downloadURL;
+      console.log(downloadURL);
+      // handle image here
+    });
   });
 
 }
